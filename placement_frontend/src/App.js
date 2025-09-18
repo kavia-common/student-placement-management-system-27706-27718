@@ -1,48 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link, NavLink } from 'react-router-dom';
+import './index.css';
+import { theme } from './theme';
+import Home from './pages/Home';
+import StudentDashboard from './pages/student/StudentDashboard';
+import StudentProfile from './pages/student/StudentProfile';
+import ResumeUpload from './pages/student/ResumeUpload';
+import PlacementStatus from './pages/student/PlacementStatus';
+import StaffDashboard from './pages/staff/StaffDashboard';
+import CompanyCriteria from './pages/staff/CompanyCriteria';
+import Shortlist from './pages/staff/Shortlist';
 
 // PUBLIC_INTERFACE
 function App() {
-  const [theme, setTheme] = useState('light');
-
-  // Effect to apply theme to document element
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
-
+  /** Main application wrapper that sets up routes, navigation, and theme.
+   * Routes:
+   *  - / : Home with role selection
+   *  - /student : Student dashboard
+   *  - /student/profile : Create/Update profile
+   *  - /student/resume : Upload resume
+   *  - /student/status : Placement status management
+   *  - /staff : Staff dashboard
+   *  - /staff/criteria : Company criteria entry
+   *  - /staff/shortlist : Filter/Shortlist students by criteria/department
+   */
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <nav className="navbar">
+        <div className="navbar-inner">
+          <Link to="/" className="brand" aria-label="Placement Home">
+            <span className="brand-badge" />
+            Placement Portal
+          </Link>
+          <div className="nav-actions">
+            <NavLink to="/student" className={({isActive}) => `btn ghost ${isActive ? '' : ''}`}>Student</NavLink>
+            <NavLink to="/staff" className={({isActive}) => `btn ghost ${isActive ? '' : ''}`}>Staff</NavLink>
+            <a className="btn" href="#" onClick={(e)=>e.preventDefault()} style={{background: theme.colors.primary}}>Get Help</a>
+          </div>
+        </div>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/student" element={<StudentDashboard />} />
+        <Route path="/student/profile" element={<StudentProfile />} />
+        <Route path="/student/resume" element={<ResumeUpload />} />
+        <Route path="/student/status" element={<PlacementStatus />} />
+        <Route path="/staff" element={<StaffDashboard />} />
+        <Route path="/staff/criteria" element={<CompanyCriteria />} />
+        <Route path="/staff/shortlist" element={<Shortlist />} />
+      </Routes>
+      <footer className="footer">Ocean Professional · Elegant · © {new Date().getFullYear()}</footer>
+    </BrowserRouter>
   );
 }
 
